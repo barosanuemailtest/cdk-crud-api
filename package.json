@@ -34,6 +34,7 @@
     "aws-cdk": "*"
   },
   "dependencies": {
+    "@aws-cdk/aws-s3": "^1.85.0",
     "source-map-support": "^0.5.19"
   }
 }
