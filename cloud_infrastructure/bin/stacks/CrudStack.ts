@@ -14,7 +14,7 @@ export class CrudStack extends Stack {
 
     private createBucket(){
         new Bucket(this, 'someBucketId', {
-            bucketName: 'someBucket',
+            bucketName: 'some-bucket',
             lifecycleRules: [{
                 expiration: Duration.days(5)
             }]
