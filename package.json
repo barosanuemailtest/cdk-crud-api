@@ -1,0 +1,29 @@
+{
+  "name": "cdk-crud-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test-cloud": "jest --config jest.config.cdk.ts",
+    "test-services": "jest --config jest.config.services.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barosanuemailtest/cdk-crud-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barosanuemailtest/cdk-crud-api/issues"
+  },
+  "homepage": "https://github.com/barosanuemailtest/cdk-crud-api#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.21",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  }
+}
