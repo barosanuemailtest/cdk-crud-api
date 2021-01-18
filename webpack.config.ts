@@ -3,7 +3,10 @@ import { Configuration } from 'webpack';
 
 const config: Configuration = {
     mode: 'none',
-    entry: './services/lib/hello/HelloHandler.ts',
+    entry: {
+        'HelloHandler': './services/lib/hello/HelloHandler.ts',
+        'zzHandler': './services/lib/zzhandler/zz.ts'
+    },
     module: {
         rules: [
             {
