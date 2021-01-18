@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as webpack from 'webpack';
+import { resolve } from 'path';
+import { Configuration } from 'webpack';
 
-const config: webpack.Configuration = {
+const config: Configuration = {
     mode: 'none',
     entry: './services/lib/hello/HelloHandler.ts',
     module: {
@@ -22,8 +22,8 @@ const config: webpack.Configuration = {
     },
     // devtool: "source-map",
     output: {
-        path: path.resolve(__dirname, 'build'),
-        filename: 'foo.bundle.js'
+        path: resolve(__dirname, 'build'),
+        filename: '[name].js'
     }
 };
 
