@@ -4,7 +4,7 @@ import { Configuration } from 'webpack';
 const config: Configuration = {
     mode: 'none',
     entry: {
-        'HelloHandler': './services/lib/hello/HelloHandler.ts',
+        'HelloLambda': './services/lib/hello/HelloLambda.ts',
         'zzHandler': './services/lib/zzhandler/zz.ts'
     },
     target: 'node',
