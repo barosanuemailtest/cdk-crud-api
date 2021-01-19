@@ -26,7 +26,7 @@ const config: Configuration = {
     // devtool: "source-map",
     output: {
         path: resolve(__dirname, 'build'),
-        filename: '[name].js'
+        filename: '[name]/[name].js'
     }
 };
 
