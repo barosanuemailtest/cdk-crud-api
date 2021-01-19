@@ -7,6 +7,7 @@ const config: Configuration = {
         'HelloHandler': './services/lib/hello/HelloHandler.ts',
         'zzHandler': './services/lib/zzhandler/zz.ts'
     },
+    target: 'node',
     module: {
         rules: [
             {
@@ -25,6 +26,7 @@ const config: Configuration = {
     },
     // devtool: "source-map",
     output: {
+        libraryTarget: 'commonjs2',
         path: resolve(__dirname, 'build'),
         filename: '[name]/[name].js'
     }

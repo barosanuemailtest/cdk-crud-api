@@ -6,12 +6,12 @@ import { join } from 'path';
 
 export function getHelloLambda(scope: Construct): LambdaFunction {
 
-    const functionCode = Code.fromAsset(join(__dirname, '..', '..', '..','build'));
+    const functionCode = Code.fromAsset(join(__dirname, '..', '..', '..','build','HelloHandler'));
 
     const someLambda = new LambdaFunction(scope, 'HelloHandler', {
         functionName: 'HelloHandler',
         code: functionCode,
-        handler: 'handler',
+        handler: 'HelloHandler.handler',
         runtime: Runtime.NODEJS_12_X
     });
     return someLambda
