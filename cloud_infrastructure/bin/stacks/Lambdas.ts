@@ -6,19 +6,6 @@ type lamdaEnv = {
     [key: string]: string
 }
 
-export function getHelloLambda(scope: Construct): LambdaFunction {
-
-    const functionCode = Code.fromAsset(join(__dirname, '..', '..', '..', 'build', 'HelloHandler'));
-
-    const someLambda = new LambdaFunction(scope, 'HelloHandler', {
-        functionName: 'HelloHandler',
-        code: functionCode,
-        handler: 'HelloHandler.handler',
-        runtime: Runtime.NODEJS_12_X
-    });
-    return someLambda
-}
-
 export function createLambda(scope: Construct, lambdaId: string, environment?: lamdaEnv): LambdaFunction {
     return new LambdaFunction(scope, lambdaId, {
         functionName: lambdaId,

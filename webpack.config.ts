@@ -5,7 +5,8 @@ const config: Configuration = {
     mode: 'none',
     entry: {
         'HelloLambda': './services/lib/hello/HelloLambda.ts',
-        'zzHandler': './services/lib/zzhandler/zz.ts'
+        'GetOneLambda': './services/lib/crud/GetOne.ts',
+        'CreateOneLambda': './services/lib/crud/CreateOne.ts'
     },
     target: 'node',
     module: {
