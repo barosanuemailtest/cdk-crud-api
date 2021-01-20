@@ -3,6 +3,7 @@
         "module": "commonjs",
         "target": "ES2019",
         "rootDir": "./services/lib/",
+        "esModuleInterop": true
     },
     "exclude": [
         "node_modules"

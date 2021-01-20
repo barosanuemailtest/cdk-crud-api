@@ -106,3 +106,4 @@ dist
 
 #CDK files
 cdk.out
+stats.json
