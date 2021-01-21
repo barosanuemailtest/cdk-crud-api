@@ -1,3 +1,13 @@
 GET https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/hello
 
 ###
+
+GET https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/items?id=d7c9e4c0-67d4-4357-bf3a-5b1b381b2276
+###
+
+POST https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/items?id=234
+Content-Type: application/json
+
+{
+    "xxsdf":"123"
+}

@@ -1,6 +1,7 @@
 import { Bucket } from '@aws-cdk/aws-s3';
 import { Stack, StackProps, Construct, Duration } from '@aws-cdk/core';
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway';
+
 import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
@@ -31,13 +32,20 @@ export class CrudStack extends Stack {
 
         tableItems.grantReadWriteData(getOneLambda);
         tableItems.grantReadWriteData(createOneLambda);
-
-
         
         const api = new RestApi(this, 'UsersApi');
+
         const helloLambdaIntegration = new LambdaIntegration(helloLambda);
         const helloLambdaResource = api.root.addResource('hello');
         helloLambdaResource.addMethod('GET', helloLambdaIntegration);
+
+        const items = api.root.addResource('items');
+        
+        const createOneIntegration = new LambdaIntegration(createOneLambda);
+        items.addMethod('POST', createOneIntegration);
+
+        const getOneIntegration = new LambdaIntegration(getOneLambda);
+        items.addMethod('GET', getOneIntegration);
     }
 
     private createTable() {

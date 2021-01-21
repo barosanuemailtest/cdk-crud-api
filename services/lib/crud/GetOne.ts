@@ -1,7 +1,7 @@
 import {
-    APIGatewayProxyEventV2,
+    APIGatewayProxyEvent,
     Context,
-    APIGatewayProxyResultV2
+    APIGatewayProxyResult
 } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 
@@ -9,10 +9,11 @@ const db = new DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || '';
 const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
 
-async function handler(event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2> {
+async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
 
-    if (event.pathParameters && event.pathParameters.id) {
-        const requestedItemId = event.pathParameters.id;
+    console.log(JSON.stringify(event));
+    if (event.queryStringParameters && event.queryStringParameters.id) {
+        const requestedItemId = event.queryStringParameters.id;
         const queryParams = {
             TableName: TABLE_NAME,
             Key: {
