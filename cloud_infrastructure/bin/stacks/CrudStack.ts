@@ -1,10 +1,11 @@
 import { Bucket } from '@aws-cdk/aws-s3';
 import { Stack, StackProps, Construct, Duration } from '@aws-cdk/core';
-import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway';
+import { LambdaRestApi, CfnAuthorizer, LambdaIntegration, AuthorizationType, RestApi } from '@aws-cdk/aws-apigateway';
 
 import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
+import { UserPool } from '@aws-cdk/aws-cognito'
 
 
 export class CrudStack extends Stack {
@@ -32,20 +33,61 @@ export class CrudStack extends Stack {
 
         tableItems.grantReadWriteData(getOneLambda);
         tableItems.grantReadWriteData(createOneLambda);
-        
+
         const api = new RestApi(this, 'UsersApi');
 
         const helloLambdaIntegration = new LambdaIntegration(helloLambda);
         const helloLambdaResource = api.root.addResource('hello');
-        helloLambdaResource.addMethod('GET', helloLambdaIntegration);
+
 
         const items = api.root.addResource('items');
-        
+
         const createOneIntegration = new LambdaIntegration(createOneLambda);
         items.addMethod('POST', createOneIntegration);
 
         const getOneIntegration = new LambdaIntegration(getOneLambda);
         items.addMethod('GET', getOneIntegration);
+
+        // Cognito User Pool with Email Sign-in Type.
+        const userPool = new UserPool(this, 'userPool', {
+            signInAliases: {
+                email: true
+            }
+        })
+
+        // Authorizer for the Hello World API that uses the
+        // Cognito User pool to Authorize users.
+        const authorizer = new CfnAuthorizer(this, 'cfnAuth', {
+            restApiId: api.restApiId,
+            name: 'HelloWorldAPIAuthorizer',
+            type: 'COGNITO_USER_POOLS',
+            identitySource: 'method.request.header.Authorization',
+            providerArns: [userPool.userPoolArn],
+        })
+
+        helloLambdaResource.addMethod('GET', helloLambdaIntegration, {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: {
+                authorizerId: authorizer.ref
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     private createTable() {
