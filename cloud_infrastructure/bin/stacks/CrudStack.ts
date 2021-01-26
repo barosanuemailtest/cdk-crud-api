@@ -5,7 +5,7 @@ import { LambdaRestApi, CfnAuthorizer, LambdaIntegration, AuthorizationType, Res
 import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
-import { UserPool } from '@aws-cdk/aws-cognito'
+import { OAuthScope, UserPool } from '@aws-cdk/aws-cognito'
 
 
 export class CrudStack extends Stack {
@@ -50,8 +50,32 @@ export class CrudStack extends Stack {
 
         // Cognito User Pool with Email Sign-in Type.
         const userPool = new UserPool(this, 'userPool', {
+            userPoolName: 'CrudStackUserPool',
+            selfSignUpEnabled: true,
             signInAliases: {
+                username: true,
                 email: true
+            }
+        });
+        const appClient = userPool.addClient('CrudStackUserPool-client', {
+            userPoolClientName: 'CrudStackUserPool-client',
+            oAuth:{
+                scopes:[
+                    OAuthScope.PROFILE,
+                    OAuthScope.EMAIL,
+                    OAuthScope.OPENID
+                ]                
+            },
+            authFlows:{
+                adminUserPassword: true,
+                custom: true,
+                userPassword: true,
+                userSrp: true
+            }
+        });
+        userPool.addDomain("CognitoDomain", {
+            cognitoDomain:{
+                domainPrefix:'barosanus-domain'
             }
         })
 
