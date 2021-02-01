@@ -5,7 +5,8 @@ import { LambdaRestApi, CfnAuthorizer, LambdaIntegration, AuthorizationType, Res
 import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 
-import { OAuthScope, UserPool } from '@aws-cdk/aws-cognito'
+import { OAuthScope, UserPool, CfnIdentityPool, CfnIdentityPoolRoleAttachment } from '@aws-cdk/aws-cognito'
+import { Effect, FederatedPrincipal, PolicyStatement, Role } from '@aws-cdk/aws-iam';
 
 
 export class CrudStack extends Stack {
@@ -57,16 +58,16 @@ export class CrudStack extends Stack {
                 email: true
             }
         });
-        const appClient = userPool.addClient('CrudStackUserPool-client', {
+        const userPoolClient = userPool.addClient('CrudStackUserPool-client', {
             userPoolClientName: 'CrudStackUserPool-client',
-            oAuth:{
-                scopes:[
+            oAuth: {
+                scopes: [
                     OAuthScope.PROFILE,
                     OAuthScope.EMAIL,
                     OAuthScope.OPENID
-                ]                
+                ]
             },
-            authFlows:{
+            authFlows: {
                 adminUserPassword: true,
                 custom: true,
                 userPassword: true,
@@ -74,10 +75,53 @@ export class CrudStack extends Stack {
             }
         });
         userPool.addDomain("CognitoDomain", {
-            cognitoDomain:{
-                domainPrefix:'barosanus-domain'
+            cognitoDomain: {
+                domainPrefix: 'barosanus-domain'
             }
-        })
+        });
+        const identityPool = new CfnIdentityPool(this, 'MyUserPoolClient', {
+            allowUnauthenticatedIdentities: false,
+            cognitoIdentityProviders: [{
+                clientId: userPoolClient.userPoolClientId,
+                providerName: userPool.userPoolProviderName
+            }]
+        });
+        const unauthenticatedRole = new Role(this, 'CognitoDefaultUnauthenticatedRole', {
+            assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
+                "StringEquals": { "cognito-identity.amazonaws.com:aud": identityPool.ref },
+                "ForAnyValue:StringLike": { "cognito-identity.amazonaws.com:amr": "unauthenticated" },
+            }, "sts:AssumeRoleWithWebIdentity"),
+        });
+        unauthenticatedRole.addToPolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                "mobileanalytics:PutEvents",
+                "cognito-sync:*"
+            ],
+            resources: ["*"],
+        }));
+        const authenticatedRole = new Role(this, 'CognitoDefaultAuthenticatedRole', {
+            assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
+                "StringEquals": { "cognito-identity.amazonaws.com:aud": identityPool.ref },
+                "ForAnyValue:StringLike": { "cognito-identity.amazonaws.com:amr": "authenticated" },
+            }, "sts:AssumeRoleWithWebIdentity"),
+        });
+        authenticatedRole.addToPolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                "mobileanalytics:PutEvents",
+                "cognito-sync:*",
+                "cognito-identity:*"
+            ],
+            resources: ["*"],
+        }));
+        const defaultPolicy = new CfnIdentityPoolRoleAttachment(this, 'DefaultValid', {
+            identityPoolId: identityPool.ref,
+            roles: {
+                'unauthenticated': unauthenticatedRole.roleArn,
+                'authenticated': authenticatedRole.roleArn
+            }
+        });
 
         // Authorizer for the Hello World API that uses the
         // Cognito User pool to Authorize users.
