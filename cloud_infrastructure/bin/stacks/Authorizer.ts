@@ -1,5 +1,5 @@
 import { CfnAuthorizer, RestApi } from "@aws-cdk/aws-apigateway";
-import { OAuthScope, UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
+import { CfnUserPoolGroup, OAuthScope, UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
 import { CfnOutput, Construct } from "@aws-cdk/core";
 import { IdentityPoolWrapper } from './IdentityPool';
 
@@ -33,6 +33,7 @@ export class Authorizer {
         this.addUserPoolClient();
         this.addUserPoolDomain();
         this.createAuthorizer();
+        this.initializeGroups();
     }
 
     private createUserPool() {
@@ -46,7 +47,7 @@ export class Authorizer {
         });
         new CfnOutput(this.scope, 'USER_POOL_ID', {
             value: this.userPool.userPoolId
-        })
+        });
     }
     private addUserPoolClient() {
         this.userPoolClient = this.userPool.addClient('CrudStackUserPool-client', {
@@ -86,6 +87,21 @@ export class Authorizer {
             identitySource: 'method.request.header.Authorization',
             providerArns: [this.userPool.userPoolArn],
         })
+    }
+
+    private initializeGroups(){
+        new CfnUserPoolGroup(this.scope, 'Barosani', {
+            groupName: 'Barosani',
+            userPoolId: this.userPool.userPoolId
+        });
+        new CfnUserPoolGroup(this.scope, 'Sefi', {
+            groupName: 'Sefi',
+            userPoolId: this.userPool.userPoolId
+        });
+        new CfnUserPoolGroup(this.scope, 'Sefuti', {
+            groupName: 'Sefuti',
+            userPoolId: this.userPool.userPoolId
+        });
     }
 
 }
