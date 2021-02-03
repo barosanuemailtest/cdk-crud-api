@@ -1,5 +1,5 @@
 import { Bucket } from '@aws-cdk/aws-s3';
-import { Stack, StackProps, Construct, Duration } from '@aws-cdk/core';
+import { Stack, StackProps, Construct, Duration, CfnOutput } from '@aws-cdk/core';
 import { LambdaIntegration, AuthorizationType, RestApi } from '@aws-cdk/aws-apigateway';
 
 import { createLambda } from './Lambdas';
@@ -38,6 +38,9 @@ export class CrudStack extends Stack {
 
         const helloLambdaIntegration = new LambdaIntegration(helloLambda);
         const helloLambdaResource = this.api.root.addResource('hello');
+        new CfnOutput(this, 'HelloInvokeUrl', {
+            value: this.api.url + 'hello'
+        })
 
 
         const items = this.api.root.addResource('items');

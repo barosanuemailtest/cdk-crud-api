@@ -1,6 +1,6 @@
 import { CfnIdentityPool, CfnIdentityPoolRoleAttachment } from "@aws-cdk/aws-cognito";
 import { Effect, FederatedPrincipal, PolicyStatement, Role } from "@aws-cdk/aws-iam";
-import { Construct } from "@aws-cdk/core";
+import { CfnOutput, Construct } from "@aws-cdk/core";
 
 export class IdentityPoolWrapper {
 
@@ -15,11 +15,11 @@ export class IdentityPoolWrapper {
     constructor(scope: Construct, clientId: string, providerName: string) {
         this.scope = scope;
         this.clientId = clientId,
-        this.providerName = providerName;
+            this.providerName = providerName;
         this.initialize();
     }
 
-    private initialize(){
+    private initialize() {
         this.createIdentityPool();
         this.createAuthenticatedRole();
         this.createUnAuthenticatedRole();
@@ -34,8 +34,10 @@ export class IdentityPoolWrapper {
                 providerName: this.providerName
             }]
         });
+        new CfnOutput(this.scope, 'IDENTITY_POOL_ID',
+            { value: this.identityPool.ref })
     }
-    private createAuthenticatedRole(){
+    private createAuthenticatedRole() {
         this.authenticatedRole = new Role(this.scope, 'CognitoDefaultAuthenticatedRole', {
             assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
                 "StringEquals": { "cognito-identity.amazonaws.com:aud": this.identityPool.ref },
@@ -54,7 +56,7 @@ export class IdentityPoolWrapper {
         }));
     }
 
-    private createUnAuthenticatedRole(){
+    private createUnAuthenticatedRole() {
         this.unAuthenticatedRole = new Role(this.scope, 'CognitoDefaultUnauthenticatedRole', {
             assumedBy: new FederatedPrincipal('cognito-identity.amazonaws.com', {
                 "StringEquals": { "cognito-identity.amazonaws.com:aud": this.identityPool.ref },
@@ -71,7 +73,7 @@ export class IdentityPoolWrapper {
         }));
     }
 
-    private attachRoles(){
+    private attachRoles() {
         new CfnIdentityPoolRoleAttachment(this.scope, 'DefaultValid', {
             identityPoolId: this.identityPool.ref,
             roles: {

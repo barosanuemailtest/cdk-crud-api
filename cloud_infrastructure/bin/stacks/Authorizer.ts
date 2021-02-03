@@ -1,6 +1,6 @@
 import { CfnAuthorizer, RestApi } from "@aws-cdk/aws-apigateway";
 import { OAuthScope, UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
-import { Construct } from "@aws-cdk/core";
+import { CfnOutput, Construct } from "@aws-cdk/core";
 import { IdentityPoolWrapper } from './IdentityPool';
 
 export class Authorizer {
@@ -44,6 +44,9 @@ export class Authorizer {
                 email: true
             }
         });
+        new CfnOutput(this.scope, 'USER_POOL_ID', {
+            value: this.userPool.userPoolId
+        })
     }
     private addUserPoolClient() {
         this.userPoolClient = this.userPool.addClient('CrudStackUserPool-client', {
@@ -61,6 +64,9 @@ export class Authorizer {
                 userPassword: true,
                 userSrp: true
             }
+        });
+        new CfnOutput(this.scope, 'APP_CLIENT_ID', {
+            value: this.userPoolClient.userPoolClientId
         });
     }
 
