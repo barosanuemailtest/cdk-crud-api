@@ -85,8 +85,7 @@ export class IdentityPoolWrapper {
             actions: [
                 "mobileanalytics:PutEvents",
                 "cognito-sync:*",
-                "cognito-identity:*",
-                "s3:ListAllMyBuckets"
+                "cognito-identity:*"
             ],
             resources: ["*"],
         }));
