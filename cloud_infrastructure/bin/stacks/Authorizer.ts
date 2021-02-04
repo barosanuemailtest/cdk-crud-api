@@ -19,21 +19,21 @@ export class Authorizer {
         this.initialize();
         this.identityPoolWrapper = new IdentityPoolWrapper(
             this.scope,
-            this.userPoolClient.userPoolClientId,
-            this.userPool.userPoolProviderName
+            this.userPoolClient,
+            this.userPool
         )
+        this.initializeGroups();
     }
 
-    public getAuthorizer(){
+    public getAuthorizer() {
         return this.authorizer;
     }
 
-    private initialize(){
+    private initialize() {
         this.createUserPool();
         this.addUserPoolClient();
         this.addUserPoolDomain();
         this.createAuthorizer();
-        this.initializeGroups();
     }
 
     private createUserPool() {
@@ -71,7 +71,7 @@ export class Authorizer {
         });
     }
 
-    private addUserPoolDomain(){
+    private addUserPoolDomain() {
         this.userPool.addDomain("CognitoDomain", {
             cognitoDomain: {
                 domainPrefix: 'barosanus-domain'
@@ -79,7 +79,7 @@ export class Authorizer {
         });
     }
 
-    private createAuthorizer(){
+    private createAuthorizer() {
         this.authorizer = new CfnAuthorizer(this.scope, 'cfnAuth', {
             restApiId: this.api.restApiId,
             name: 'HelloWorldAPIAuthorizer',
@@ -89,10 +89,11 @@ export class Authorizer {
         })
     }
 
-    private initializeGroups(){
+    private initializeGroups() {
         new CfnUserPoolGroup(this.scope, 'Barosani', {
             groupName: 'Barosani',
-            userPoolId: this.userPool.userPoolId
+            userPoolId: this.userPool.userPoolId,
+            roleArn: this.identityPoolWrapper.getAdminRole().roleArn
         });
         new CfnUserPoolGroup(this.scope, 'Sefi', {
             groupName: 'Sefi',
