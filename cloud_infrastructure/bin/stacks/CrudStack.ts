@@ -18,6 +18,7 @@ export class CrudStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
+        this.createBucket('profile-pictures-ax9lbm0')
         const tableItems = this.createTable();
 
         const lambdaEnv = {
@@ -69,17 +70,15 @@ export class CrudStack extends Stack {
             tableName: this.tableName
         })
     }
-
-
-
-
-
-
-    private createBucket() {
-        new Bucket(this, 'someBucketId', {
+    private createBucket(bucketName: string) {
+        const bucket = new Bucket(this, 'someBucketId', {
             lifecycleRules: [{
                 expiration: Duration.days(5)
-            }]
+            }],
+            bucketName: bucketName
+        })
+        new CfnOutput(this, 'PROFILE-PICTURES-BUCKET', {
+            value: bucket.bucketName
         })
     }
 }

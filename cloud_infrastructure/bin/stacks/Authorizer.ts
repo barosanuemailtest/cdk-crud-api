@@ -45,7 +45,7 @@ export class Authorizer {
                 email: true
             }
         });
-        new CfnOutput(this.scope, 'USER_POOL_ID', {
+        new CfnOutput(this.scope, 'USER-POOL-ID', {
             value: this.userPool.userPoolId
         });
     }
@@ -66,7 +66,7 @@ export class Authorizer {
                 userSrp: true
             }
         });
-        new CfnOutput(this.scope, 'APP_CLIENT_ID', {
+        new CfnOutput(this.scope, 'APP-CLIENT-ID', {
             value: this.userPoolClient.userPoolClientId
         });
     }

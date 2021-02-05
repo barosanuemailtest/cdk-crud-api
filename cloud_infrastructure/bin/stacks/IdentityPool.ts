@@ -38,7 +38,7 @@ export class IdentityPoolWrapper {
 
             }]
         });
-        new CfnOutput(this.scope, 'IDENTITY_POOL_ID',
+        new CfnOutput(this.scope, 'IDENTITY-POOL-ID',
             { value: this.identityPool.ref })
     }
 
@@ -86,6 +86,13 @@ export class IdentityPoolWrapper {
                 "mobileanalytics:PutEvents",
                 "cognito-sync:*",
                 "cognito-identity:*"
+            ],
+            resources: ["*"],
+        }));
+        this.authenticatedRole.addToPolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                "s3:PutObject"
             ],
             resources: ["*"],
         }));
