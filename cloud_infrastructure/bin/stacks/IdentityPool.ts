@@ -92,7 +92,8 @@ export class IdentityPoolWrapper {
         this.authenticatedRole.addToPolicy(new PolicyStatement({
             effect: Effect.ALLOW,
             actions: [
-                "s3:PutObject"
+                "s3:PutObject",
+                "s3:PutObjectAcl"
             ],
             resources: ["*"],
         }));
