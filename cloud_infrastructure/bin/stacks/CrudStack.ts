@@ -1,4 +1,4 @@
-import { Bucket } from '@aws-cdk/aws-s3';
+import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
 import { Stack, StackProps, Construct, Duration, CfnOutput } from '@aws-cdk/core';
 import { LambdaIntegration, AuthorizationType, RestApi } from '@aws-cdk/aws-apigateway';
 
@@ -75,7 +75,22 @@ export class CrudStack extends Stack {
             lifecycleRules: [{
                 expiration: Duration.days(5)
             }],
-            bucketName: bucketName
+            bucketName: bucketName,
+            cors: [
+                {
+                    allowedMethods:[
+                        HttpMethods.HEAD,
+                        HttpMethods.GET,
+                        HttpMethods.PUT
+                    ],
+                    allowedOrigins:[
+                        '*'
+                    ],
+                    allowedHeaders:[
+                        '*'
+                    ]
+                }
+            ]
         })
         new CfnOutput(this, 'PROFILE-PICTURES-BUCKET', {
             value: bucket.bucketName
