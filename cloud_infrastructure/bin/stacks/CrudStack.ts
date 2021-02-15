@@ -5,71 +5,43 @@ import { LambdaIntegration, AuthorizationType, RestApi } from '@aws-cdk/aws-apig
 import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Authorizer } from './Authorizer';
+import { SpacesTable } from './Tables/SpacesTable';
+
+const spacesTableName = 'SpacesTable';
+const reservationsTableName = 'ReservationsTable';
 
 
 export class CrudStack extends Stack {
 
-    private tableName = 'items';
-    private tablePrimaryKey = 'itemId';
     private api = new RestApi(this, 'UsersApi');
 
     private authorizer = new Authorizer(this, this.api);
+    private spacesTable = new SpacesTable(this);
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
         this.createBucket('profile-pictures-ax9lbm0')
-        const tableItems = this.createTable();
-
-        const lambdaEnv = {
-            TABLE_NAME: this.tableName,
-            PRIMARY_KEY: this.tablePrimaryKey
-        };
-
+ 
+        // Hello api integration:
         const helloLambda = createLambda(this, 'HelloLambda');
-        const getOneLambda = createLambda(this, 'GetOneLambda', lambdaEnv);
-        //    const getAllLambda = createLambda(this, 'GetAllLambda', lambdaEnv);
-        const createOneLambda = createLambda(this, 'CreateOneLambda', lambdaEnv);
-        //    const deleteOneLambda = createLambda(this, 'DeleteOneLambda', lambdaEnv);
-
-        tableItems.grantReadWriteData(getOneLambda);
-        tableItems.grantReadWriteData(createOneLambda);
-
-
-
         const helloLambdaIntegration = new LambdaIntegration(helloLambda);
         const helloLambdaResource = this.api.root.addResource('hello');
-        new CfnOutput(this, 'HelloInvokeUrl', {
-            value: this.api.url + 'hello'
-        })
-
-
-        const items = this.api.root.addResource('items');
-
-        const createOneIntegration = new LambdaIntegration(createOneLambda);
-        items.addMethod('POST', createOneIntegration);
-
-        const getOneIntegration = new LambdaIntegration(getOneLambda);
-        items.addMethod('GET', getOneIntegration);
-
         helloLambdaResource.addMethod('GET', helloLambdaIntegration, {
             authorizationType: AuthorizationType.COGNITO,
             authorizer: {
                 authorizerId: this.authorizer.getAuthorizer().ref
             }
         });
+        //Spaces api integration:
+        const spacesResource = this.api.root.addResource('spaces')
+        spacesResource.addMethod('GET', this.spacesTable.readItemLambdaIntegration);
+        spacesResource.addMethod('POST', this.spacesTable.createItemLambdaIntegration);
+        spacesResource.addMethod('PUT', this.spacesTable.updateItemLambdaIntegration);
+        spacesResource.addMethod('DELETE', this.spacesTable.deleteItemLambdaIntegration);
 
     }
 
-    private createTable() {
-        return new Table(this, this.tableName, {
-            partitionKey: {
-                name: this.tablePrimaryKey,
-                type: AttributeType.STRING
-            },
-            tableName: this.tableName
-        })
-    }
     private createBucket(bucketName: string) {
         const bucket = new Bucket(this, 'someBucketId', {
             lifecycleRules: [{

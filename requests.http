@@ -1,13 +1,18 @@
-GET https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/hello
+GET https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/hello
 
 ###
 
-GET https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/items?id=d7c9e4c0-67d4-4357-bf3a-5b1b381b2276
+GET https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/items?id=4dcc8921-7487-481e-98ef-fdf4a842d2db
 ###
 
-POST https://6qbmkvs098.execute-api.eu-west-1.amazonaws.com/prod/items?id=234
+POST https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/items?id=234
 Content-Type: application/json
 
 {
     "xxsdf":"123"
 }
+###
+
+PUT  https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/spaces
+
+###

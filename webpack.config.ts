@@ -5,8 +5,10 @@ const config: Configuration = {
     mode: 'none',
     entry: {
         'HelloLambda': './services/lib/hello/HelloLambda.ts',
-        'GetOneLambda': './services/lib/crud/GetOne.ts',
-        'CreateOneLambda': './services/lib/crud/CreateOne.ts'
+        'createSpaceItemLambda': './services/lib/spaces/Post.ts',
+        'readSpaceItemLambda': './services/lib/spaces/Get.ts',
+        'updateSpaceItemLambda': './services/lib/spaces/Put.ts',
+        'deleteSpaceItemLambda': './services/lib/spaces/Delete.ts'
     },
     target: 'node',
     module: {
@@ -22,7 +24,7 @@ const config: Configuration = {
             }
         ]
     },
-    externals:{
+    externals: {
         'aws-sdk': 'aws-sdk'
     },
     resolve: {
