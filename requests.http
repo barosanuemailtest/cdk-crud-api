@@ -14,6 +14,10 @@ Content-Type: application/json
 }
 ###
 
-PUT  https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/spaces
+GET  https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/spaces?spaceId=qkepir
+
+###
+
+GET  https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/spaces
 
 ###

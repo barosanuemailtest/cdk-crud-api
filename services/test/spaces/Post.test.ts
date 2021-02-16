@@ -17,7 +17,7 @@ const context = {
 
 describe('Create space test suite', () => {
 
-    test('generate id',async () => {
+    test('run request',async () => {
         await handler(event, context);
     })
 });
