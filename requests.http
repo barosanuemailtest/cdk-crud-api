@@ -5,11 +5,12 @@ GET https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/hello
 GET https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/items?id=4dcc8921-7487-481e-98ef-fdf4a842d2db
 ###
 
-POST https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/items?id=234
+POST https://xt6keyqlr4.execute-api.eu-west-1.amazonaws.com/prod/spaces
 Content-Type: application/json
 
 {
-    "xxsdf":"123"
+    "name":"best resort ever!",
+    "location": "Paris"
 }
 ###
 

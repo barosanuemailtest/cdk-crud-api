@@ -1,5 +1,5 @@
 export interface SpaceEntry {
-    id: string,
+    spaceId: string,
     name: string,
     location: string,
     description?: string,

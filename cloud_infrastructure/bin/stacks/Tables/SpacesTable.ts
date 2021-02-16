@@ -51,7 +51,8 @@ export class SpacesTable {
             'createSpaceItemLambda',
             ['..', '..', '..', '..', 'build'],
             {
-                TABLE_NAME: this.spacesTable.tableName
+                TABLE_NAME: this.spacesTable.tableName,
+                PRIMARY_KEY: spacesTablePrimaryKey
             }
         );
         this.readItemLambda = createLambda(
@@ -59,7 +60,8 @@ export class SpacesTable {
             'readSpaceItemLambda',
             ['..', '..', '..', '..', 'build'],
             {
-                TABLE_NAME: this.spacesTable.tableName
+                TABLE_NAME: this.spacesTable.tableName,
+                PRIMARY_KEY: spacesTablePrimaryKey
             }
         );
         this.updateItemLambda = createLambda(
@@ -67,7 +69,8 @@ export class SpacesTable {
             'updateSpaceItemLambda',
             ['..', '..', '..', '..', 'build'],
             {
-                TABLE_NAME: this.spacesTable.tableName
+                TABLE_NAME: this.spacesTable.tableName,
+                PRIMARY_KEY: spacesTablePrimaryKey
             }
         );
         this.deleteItemLambda = createLambda(
@@ -75,7 +78,8 @@ export class SpacesTable {
             'deleteSpaceItemLambda',
             ['..', '..', '..', '..', 'build'],
             {
-                TABLE_NAME: this.spacesTable.tableName
+                TABLE_NAME: this.spacesTable.tableName,
+                PRIMARY_KEY: spacesTablePrimaryKey
             }
         );
 
