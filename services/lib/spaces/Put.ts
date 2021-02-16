@@ -20,9 +20,12 @@ async function handler(event: APIGatewayProxyEventV2, context: Context): Promise
                     Key: {
                         [PRIMARY_KEY]: spaceId
                     },
-                    UpdateExpression: `set ${requestBodyKeys[0]} = :new`,
+                    UpdateExpression: `set #zcxNewValue = :new`,
                     ExpressionAttributeValues: {
                         ':new': `${requestBodyValues[0]}`
+                    },
+                    ExpressionAttributeNames: {
+                        '#zcxNewValue': `${requestBodyKeys[0]}`
                     }
                 }
                 const updateResult = await db.update(params).promise();

@@ -3,7 +3,7 @@ import { handler } from '../../lib/spaces/Put';
 
 const event = {
     body: {
-        locationzzz: 'someLocation-CHANGED'
+        location: 'someLocation-CHANGED even for reserved keyword'
     },
     queryStringParameters: {
         spaceId: 'ra071m'
