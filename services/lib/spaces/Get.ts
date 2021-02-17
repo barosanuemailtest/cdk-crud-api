@@ -6,6 +6,10 @@ const TABLE_NAME = process.env.TABLE_NAME || '';
 const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
 
 async function handler(event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2> {
+    const response: APIGatewayProxyResultV2 = {};
+    response.headers = {
+        "Access-Control-Allow-Origin": "*"
+    }
     try {
         let result: DynamoDB.GetItemOutput;
         if (event.queryStringParameters && event.queryStringParameters?.[PRIMARY_KEY]) {
@@ -23,17 +27,14 @@ async function handler(event: APIGatewayProxyEventV2, context: Context): Promise
             }
             result = await db.scan(scanParams).promise();
         }
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify(result)
-        }
+        response.statusCode = 200
+        response.body = JSON.stringify(result)
+        return response
     } catch (error) {
         console.error(error)
-        return {
-            statusCode: 200,
-            body: error
-        }
+        response.statusCode = 500
+        response.body = error
+        return response
     }
 
 

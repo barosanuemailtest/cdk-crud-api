@@ -13,7 +13,7 @@ const reservationsTableName = 'ReservationsTable';
 
 export class CrudStack extends Stack {
 
-    private api = new RestApi(this, 'UsersApi');
+    private api = new RestApi(this, 'UsersApi',);
 
     private authorizer = new Authorizer(this, this.api);
     private spacesTable = new SpacesTable(this);
@@ -21,8 +21,16 @@ export class CrudStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        this.createBucket('profile-pictures-ax9lbm0')
- 
+        const profilePicturesBucket = this.createPhotoBucket('profile-pictures-ax9lbm0z')
+        new CfnOutput(this, 'PROFILE-PICTURES-BUCKET', {
+            value: profilePicturesBucket.bucketName
+        })
+        const spacesPhotosBucket = this.createPhotoBucket('spaces-photos-ax9lbm0z')
+        new CfnOutput(this, 'SPACES-PHOTOS-BUCKET', {
+            value: spacesPhotosBucket.bucketName
+        })
+
+
         // Hello api integration:
         const helloLambda = createLambda(this, 'HelloLambda');
         const helloLambdaIntegration = new LambdaIntegration(helloLambda);
@@ -42,30 +50,28 @@ export class CrudStack extends Stack {
 
     }
 
-    private createBucket(bucketName: string) {
-        const bucket = new Bucket(this, 'someBucketId', {
+    private createPhotoBucket(bucketName: string): Bucket {
+        const bucket = new Bucket(this, bucketName, {
             lifecycleRules: [{
                 expiration: Duration.days(5)
             }],
             bucketName: bucketName,
             cors: [
                 {
-                    allowedMethods:[
+                    allowedMethods: [
                         HttpMethods.HEAD,
                         HttpMethods.GET,
                         HttpMethods.PUT
                     ],
-                    allowedOrigins:[
+                    allowedOrigins: [
                         '*'
                     ],
-                    allowedHeaders:[
+                    allowedHeaders: [
                         '*'
                     ]
                 }
             ]
         })
-        new CfnOutput(this, 'PROFILE-PICTURES-BUCKET', {
-            value: bucket.bucketName
-        })
+        return bucket;
     }
 }

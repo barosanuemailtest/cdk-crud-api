@@ -63,7 +63,9 @@ export class IdentityPoolWrapper {
         this.adminRole.addToPolicy(new PolicyStatement({
             effect: Effect.ALLOW,
             actions:[
-                's3:ListAllMyBuckets'
+                's3:ListAllMyBuckets',
+                "s3:PutObject",
+                "s3:PutObjectAcl"
             ],
             resources: ['*']
         }));
@@ -110,7 +112,7 @@ export class IdentityPoolWrapper {
                 },
             }, 'sts:AssumeRoleWithWebIdentity'),
         });
-        this.authenticatedRole.addToPolicy(new PolicyStatement({
+        this.unAuthenticatedRole.addToPolicy(new PolicyStatement({
             effect: Effect.ALLOW,
             actions: [
                 "mobileanalytics:PutEvents",

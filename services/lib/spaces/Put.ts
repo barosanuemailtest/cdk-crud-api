@@ -7,6 +7,10 @@ const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
 
 async function handler(event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2> {
 
+    const response: APIGatewayProxyResultV2 = {};
+    response.headers = {
+        "Access-Control-Allow-Origin" : "*"
+    }
     try {
         const queryParams = event.queryStringParameters;
         const requestBody = event.body
@@ -29,16 +33,20 @@ async function handler(event: APIGatewayProxyEventV2, context: Context): Promise
                     }
                 }
                 const updateResult = await db.update(params).promise();
-                return { statusCode: 202, body: JSON.stringify(updateResult) };
-            } else {
-                return { statusCode: 403, body: 'Required params and request body' };
+                response.statusCode = 202;
+                response.body = JSON.stringify(updateResult)
             }
         } else {
-            return { statusCode: 403, body: 'Required params and request body' };
+            response.statusCode = 403;
+            response.body = 'Required params and request body'
         }
+
     } catch (error) {
-        return { statusCode: 500, body: JSON.stringify(error) };
+        response.statusCode = 500;
+        response.body = JSON.stringify(error)
     }
+
+    return response;
 
 }
 

@@ -7,16 +7,25 @@ const TABLE_NAME = process.env.TABLE_NAME || '';
 const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
 
 async function handler(event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2> {
-
+    const response: APIGatewayProxyResultV2 = {};
+    response.headers = {
+        "Access-Control-Allow-Origin": "*"
+    }
     if (!event.body) {
-        return { statusCode: 400, body: 'invalid request, you are missing the parameter body' };
+        response.statusCode = 400
+        response.body = 'invalid request, you are missing the parameter body'
+        return response;
     }
     const item = typeof event.body == 'object' ? event.body : JSON.parse(event.body);
-    if(!item.name){
-        return { statusCode: 400, body: 'invalid request, you are missing the parameter name' };
+    if (!item.name) {
+        response.statusCode = 400
+        response.body = 'invalid request, you are missing the parameter name'
+        return response;
     }
-    if(!item.location){
-        return { statusCode: 400, body: 'invalid request, you are missing the parameter location' };
+    if (!item.location) {
+        response.statusCode = 400
+        response.body = 'invalid request, you are missing the parameter location'
+        return response;
     }
     item[PRIMARY_KEY] = generateId();
     const params = {
@@ -26,10 +35,13 @@ async function handler(event: APIGatewayProxyEventV2, context: Context): Promise
 
     try {
         await db.put(params).promise();
-        return { statusCode: 201, body: 'Created' };
+        response.statusCode = 201
+        response.body = 'Created'
+        return response;
     } catch (dbError) {
-        console.log(dbError);
-        return { statusCode: 500, body: dbError };
+        response.statusCode = 500
+        response.body = dbError
+        return response;
     }
 
 }
