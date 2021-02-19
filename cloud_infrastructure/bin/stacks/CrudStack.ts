@@ -1,15 +1,10 @@
 import { Bucket, HttpMethods } from '@aws-cdk/aws-s3';
 import { Stack, StackProps, Construct, Duration, CfnOutput } from '@aws-cdk/core';
 import { LambdaIntegration, AuthorizationType, RestApi } from '@aws-cdk/aws-apigateway';
-
 import { createLambda } from './Lambdas';
-import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Authorizer } from './Authorizer';
 import { SpacesTable } from './Tables/SpacesTable';
 import { ReservationsTable } from './Tables/ReservationsTable';
-
-const spacesTableName = 'SpacesTable';
-const reservationsTableName = 'ReservationsTable';
 
 
 export class CrudStack extends Stack {
