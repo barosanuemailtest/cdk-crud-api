@@ -6,6 +6,7 @@ import { createLambda } from './Lambdas';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Authorizer } from './Authorizer';
 import { SpacesTable } from './Tables/SpacesTable';
+import { ReservationsTable } from './Tables/ReservationsTable';
 
 const spacesTableName = 'SpacesTable';
 const reservationsTableName = 'ReservationsTable';
@@ -17,6 +18,7 @@ export class CrudStack extends Stack {
 
     private authorizer = new Authorizer(this, this.api);
     private spacesTable = new SpacesTable(this);
+    private reservationsTable = new ReservationsTable(this);
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
@@ -47,6 +49,21 @@ export class CrudStack extends Stack {
         spacesResource.addMethod('POST', this.spacesTable.createItemLambdaIntegration);
         spacesResource.addMethod('PUT', this.spacesTable.updateItemLambdaIntegration);
         spacesResource.addMethod('DELETE', this.spacesTable.deleteItemLambdaIntegration);
+
+        //Reservations api integration:
+        const reservationsResource = this.api.root.addResource('reservations');
+        reservationsResource.addMethod('POST', this.reservationsTable.createItemLambdaIntegration, {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: {
+                authorizerId: this.authorizer.getAuthorizer().ref
+            }
+        });
+        reservationsResource.addMethod('GET', this.reservationsTable.readItemLambdaIntegration, {
+            authorizationType: AuthorizationType.COGNITO,
+            authorizer: {
+                authorizerId: this.authorizer.getAuthorizer().ref
+            }
+        });
 
     }
 

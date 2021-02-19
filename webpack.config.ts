@@ -8,7 +8,10 @@ const config: Configuration = {
         'createSpaceItemLambda': './services/lib/spaces/Post.ts',
         'readSpaceItemLambda': './services/lib/spaces/Get.ts',
         'updateSpaceItemLambda': './services/lib/spaces/Put.ts',
-        'deleteSpaceItemLambda': './services/lib/spaces/Delete.ts'
+        'deleteSpaceItemLambda': './services/lib/spaces/Delete.ts',
+
+        'createReservationLambda': './services/lib/reservations/Post.ts',
+        'readReservationLambda': './services/lib/reservations/Get.ts',
     },
     target: 'node',
     module: {

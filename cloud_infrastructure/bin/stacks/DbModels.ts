@@ -6,9 +6,10 @@ export interface SpaceEntry {
     photoURL?: String
 }
 
+export type ReservationState = 'PENDING' | 'APPROVED' | 'CANCELED'
 export interface ReservationEntry {
-    id: string,
+    reservationId: string,
     user: string,
-    period: string,
-    spaceId: string
+    spaceId: string,
+    state: ReservationState
 }

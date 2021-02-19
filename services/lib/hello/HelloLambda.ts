@@ -13,7 +13,7 @@ async function handler(event: APIGatewayProxyEventV2, context: Context):Promise<
     console.log(context);
     return {
         statusCode: 200,
-        body: 'Hello from lambda, it is live! ' + uuid()        
+        body: JSON.stringify(event)        
     }
 }
 
